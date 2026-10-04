@@ -1,0 +1,14 @@
+/.venv/
+/build/
+/dist/
+/.pytest_cache/
+/.ruff_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.DS_Store
+
+# Local working documents, issue state, and development worktrees.
+/.local/
+/.issues/
+/.worktrees/
