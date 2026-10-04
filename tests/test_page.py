@@ -232,10 +232,15 @@ def test_authorized_retention_requires_preview_and_confirmation_before_apply() -
     assert any("Preview: 2 event(s)" in item.value for item in app.info)
     assert app.button(key="toolframe-audit-retention-apply").proto.disabled
 
-    # A disabled apply control cannot mutate the service before confirmation.
-    app.button(key="toolframe-audit-retention-apply").click().run()
+    # Inspect the disabled guard without an interaction unavailable to users.
+    app.run()
+    assert not app.exception
+    assert app.button(key="toolframe-audit-retention-apply").proto.disabled
     assert service.mutations == 0
     app.checkbox(key="toolframe-audit-retention-confirm").check().run()
+    assert not app.exception
+    assert not app.button(key="toolframe-audit-retention-apply").proto.disabled
+    assert service.mutations == 0
     app.button(key="toolframe-audit-retention-apply").click().run()
     assert not app.exception
     assert service.mutations == 1
