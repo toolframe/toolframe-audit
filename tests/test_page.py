@@ -16,7 +16,9 @@ from toolframe_sdk import PluginError
 from toolframe_audit.page import _jsonl, _normalise_filters, _request
 
 
-def _event(event_id: str, *, sequence: int, action: str = "record.created") -> dict[str, Any]:
+def _event(
+    event_id: str, *, sequence: int, action: str = "record.created"
+) -> dict[str, Any]:
     return {
         "sequence": sequence,
         "event_id": event_id,
@@ -58,7 +60,9 @@ class _FakeService:
         self.calls: list[tuple[str, dict[str, Any]]] = []
         self.mutations = 0
 
-    def call(self, method: str, params: dict[str, Any] | None = None, **kwargs: Any) -> dict[str, Any]:
+    def call(
+        self, method: str, params: dict[str, Any] | None = None, **kwargs: Any
+    ) -> dict[str, Any]:
         del kwargs
         request = dict(params or {})
         self.calls.append((method, request))
@@ -77,9 +81,19 @@ class _FakeService:
             )
         if method == "prune_events":
             if request.get("preview") is True:
-                return {**self.preview, "cutoff": request["cutoff"], "limit": request["limit"]}
+                return {
+                    **self.preview,
+                    "cutoff": request["cutoff"],
+                    "limit": request["limit"],
+                }
             self.mutations += 1
-            return {**self.preview, "cutoff": request["cutoff"], "limit": request["limit"], "pruned_count": 2, "preview": False}
+            return {
+                **self.preview,
+                "cutoff": request["cutoff"],
+                "limit": request["limit"],
+                "pruned_count": 2,
+                "preview": False,
+            }
         raise AssertionError(f"unexpected method {method!r}")
 
 
@@ -179,7 +193,9 @@ def test_filters_and_pagination_reset_the_keyset_cursor() -> None:
     assert service.calls[-1] == ("list_events", {"limit": 50, "before": 10})
 
     app.text_input(key="toolframe-audit-action").set_value("record.updated")
-    next(button for button in app.button if button.label == "Apply filters").click().run()
+    next(
+        button for button in app.button if button.label == "Apply filters"
+    ).click().run()
     assert not app.exception
     assert service.calls[-1] == (
         "list_events",
@@ -190,7 +206,10 @@ def test_filters_and_pagination_reset_the_keyset_cursor() -> None:
 
 def test_jsonl_export_is_bounded_to_one_hundred_events_and_valid_lines() -> None:
     payload = _jsonl(
-        [{"event_id": f"event-{index}", "metadata": {"index": index}} for index in range(105)]
+        [
+            {"event_id": f"event-{index}", "metadata": {"index": index}}
+            for index in range(105)
+        ]
     )
     lines = payload.splitlines()
 
@@ -253,7 +272,9 @@ def test_authorized_retention_requires_preview_and_confirmation_before_apply() -
             "through_sequence": 42,
         },
     ) in service.calls
-    assert any("Retention applied; 2 event(s) removed." in item.value for item in app.success)
+    assert any(
+        "Retention applied; 2 event(s) removed." in item.value for item in app.success
+    )
 
 
 def test_retention_cutoff_change_discards_stale_preview() -> None:

@@ -66,7 +66,9 @@ class _Peer:
             "owner_generation": current.get(
                 "owner_generation", f"{self.plugin_id}-generation"
             ),
-            "application_id": current.get("application_id", self.harness.application_id),
+            "application_id": current.get(
+                "application_id", self.harness.application_id
+            ),
             "principal": current.get("principal"),
             "scope_catalog": current.get("scope_catalog", {}),
         }
@@ -79,7 +81,9 @@ class _Peer:
         finally:
             call_context.reset(token)
 
-    async def request(self, method: str, params: dict[str, Any], *, timeout: float = 30):
+    async def request(
+        self, method: str, params: dict[str, Any], *, timeout: float = 30
+    ):
         del timeout
         if method == "management.call":
             info = {
@@ -102,7 +106,8 @@ class _Peer:
             if (
                 self.plugin_id == "producer"
                 and params["method"] == "execute_returning"
-                and "DELETE FROM audit_outbox" in params.get("params", {}).get("sql", "")
+                and "DELETE FROM audit_outbox"
+                in params.get("params", {}).get("sql", "")
                 and self.harness.fail_ack_once
             ):
                 self.harness.fail_ack_once = False

@@ -125,7 +125,9 @@ async def start_host(home: Path, wheelhouse: Path) -> Host:
 
 
 async def install(host: Host, wheelhouse: Path, name: str) -> None:
-    await operate(host, "add", id=name, source=str(_wheel(name, wheelhouse)), enable=True)
+    await operate(
+        host, "add", id=name, source=str(_wheel(name, wheelhouse)), enable=True
+    )
 
 
 async def install_base(host: Host, wheelhouse: Path) -> None:
@@ -252,7 +254,9 @@ def _event(event_id: str, *, action: str = "record.created") -> dict[str, Any]:
 
 @pytest.mark.asyncio
 async def test_core_outbox_background_preserves_original_actor(core_host: Host):
-    caller = _principal("audit-example.write", user_id="original-user", client_id="cli-1")
+    caller = _principal(
+        "audit-example.write", user_id="original-user", client_id="cli-1"
+    )
     await create_record(core_host, "background-1", principal=caller)
 
     queued = await core_host.call_service(
@@ -264,9 +268,7 @@ async def test_core_outbox_background_preserves_original_actor(core_host: Host):
     )
     assert queued == {"status": "queued"}
 
-    page = await wait_until(
-        lambda: _page_with_event(core_host, "background-1")
-    )
+    page = await wait_until(lambda: _page_with_event(core_host, "background-1"))
     row = next(item for item in page["events"] if item["entity_id"] == "background-1")
     assert row["application_id"] == core_host.composition.application.id
     assert row["source_owner"] == "audit-example"
@@ -284,10 +286,14 @@ async def _page_with_event(host: Host, identifier: str) -> dict[str, Any] | None
     """Return a page only after the expected event has been delivered."""
 
     page = await audit_list(host, principal=Principal(kind="operator"), limit=100)
-    return page if any(
-        row["event_id"] == identifier or row["entity_id"] == identifier
-        for row in page["events"]
-    ) else None
+    return (
+        page
+        if any(
+            row["event_id"] == identifier or row["entity_id"] == identifier
+            for row in page["events"]
+        )
+        else None
+    )
 
 
 @pytest.mark.asyncio
@@ -346,9 +352,7 @@ async def test_core_source_fence_dedup_conflict_and_public_ingest_rejection(
 
     forged = {**event, "source_owner": "other-plugin"}
     with pytest.raises(PluginError) as error:
-        await core_host.call_service(
-            "probe", "probe.events", "emit", {"event": forged}
-        )
+        await core_host.call_service("probe", "probe.events", "emit", {"event": forged})
     assert error.value.code == "handler_failed"
     assert "source_owner" in error.value.message
 
@@ -364,13 +368,17 @@ async def test_core_source_fence_dedup_conflict_and_public_ingest_rejection(
 
 
 @pytest.mark.asyncio
-async def test_core_reload_disable_restart_and_keyset_filters(core_host: Host, wheelhouse: Path):
+async def test_core_reload_disable_restart_and_keyset_filters(
+    core_host: Host, wheelhouse: Path
+):
     caller = _principal("audit-example.write", user_id="filter-user")
     for record_id in ("first", "second", "third"):
         await create_record(core_host, record_id, principal=caller)
     assert (await drain(core_host))["acknowledged"] == 3
 
-    first_page = await audit_list(core_host, principal=Principal(kind="operator"), limit=2)
+    first_page = await audit_list(
+        core_host, principal=Principal(kind="operator"), limit=2
+    )
     assert first_page["count"] == 2
     assert first_page["next_before"] is not None
     second_page = await audit_list(
@@ -494,7 +502,9 @@ async def test_core_http_scope_separation_and_explicit_retention(scoped_host: Ho
         assert response.status_code == 200
         assert response.json()["count"] == 1
         assert (
-            await read_client.post(base + "prune_events", json={"cutoff": "2999-01-01T00:00:00Z"})
+            await read_client.post(
+                base + "prune_events", json={"cutoff": "2999-01-01T00:00:00Z"}
+            )
         ).status_code == 403
         assert (
             await read_client.post(
@@ -523,7 +533,9 @@ async def test_core_http_scope_separation_and_explicit_retention(scoped_host: Ho
         )
         assert applied.status_code == 200
         assert applied.json()["pruned_count"] == 1
-        assert (await read_client.post(base + "list_events", json={})).json()["count"] == 0
+        assert (await read_client.post(base + "list_events", json={})).json()[
+            "count"
+        ] == 0
     finally:
         await read_client.aclose()
         await manage_client.aclose()
