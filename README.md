@@ -8,11 +8,10 @@ producer's business mutation and pending audit event in the same SQL transaction
 ## Quick start
 
 Python 3.14 or later, Toolframe SDK 0.3.0 and a running Toolframe application with
-a SQL storage provider are required. Build the Audit wheel from this checkout:
+a SQL storage provider are required. Install from PyPI:
 
 ```sh
-uv build
-toolframe --home ./my-app plugin add ./dist/toolframe_audit-0.1.0-py3-none-any.whl --enable
+toolframe --home ./my-app plugin add pypi:toolframe-audit==0.1.0 --enable
 toolframe --home ./my-app plugin status audit --check
 ```
 
@@ -47,3 +46,5 @@ history and advances a cutoff that rejects late older events.
 See [architecture and trust](docs/architecture.md),
 [usage](src/toolframe_audit/docs/usage.md) and
 [verification](docs/verification.md) for contracts and reproducible checks.
+
+For release validation and Trusted Publisher setup, see [releasing](docs/releasing.md).
