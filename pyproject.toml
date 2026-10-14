@@ -28,7 +28,7 @@ audit = "toolframe_audit.plugin:plugin"
 [dependency-groups]
 dev = [
     "pytest>=8,<10", "pytest-asyncio>=1,<2", "ruff>=0.12,<1", "build>=1,<2",
-    "toolframe-storage-sqlite==0.3.1", "toolframe-core==0.6.1",
+    "toolframe-storage-sqlite==0.3.1", "toolframe-core==0.6.2",
 ]
 
 [tool.hatch.build.targets.wheel]
