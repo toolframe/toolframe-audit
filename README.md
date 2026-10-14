@@ -48,3 +48,5 @@ See [architecture and trust](docs/architecture.md),
 [verification](docs/verification.md) for contracts and reproducible checks.
 
 For release validation and Trusted Publisher setup, see [releasing](docs/releasing.md).
+
+For development hooks and contribution rules, see [Contributing](CONTRIBUTING.md).
