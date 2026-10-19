@@ -33,9 +33,9 @@ def main():
             name.startswith(("tests/", "examples/", ".local/", "build/"))
             for name in names
         )
-        metadata = archive.read("toolframe_audit-0.1.0.dist-info/METADATA").decode()
+        metadata = archive.read("toolframe_audit-0.2.0.dist-info/METADATA").decode()
         assert "Requires-Python: >=3.14" in metadata
-        assert "Requires-Dist: toolframe-sdk==0.3.0" in metadata
+        assert "Requires-Dist: toolframe-sdk==0.4.0" in metadata
         assert "License-Expression: Apache-2.0" in metadata
     with tempfile.TemporaryDirectory(prefix="audit-wheel-") as temporary:
         environment = Path(temporary) / "venv"
@@ -56,7 +56,7 @@ from importlib.resources import files
 from toolframe_audit import drain, enqueue, outbox_migration
 from toolframe_audit.page import render
 from toolframe_audit.plugin import plugin
-assert version('toolframe-audit') == '0.1.0'
+assert version('toolframe-audit') == '0.2.0'
 assert plugin.id == 'audit' and plugin.provider_kind is None
 assert plugin.services['audit.events'].methods['ingest'].audience == 'internal'
 assert all(not method.public_api for method in plugin.services['audit.events'].methods.values())

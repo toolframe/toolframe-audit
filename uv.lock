@@ -1071,7 +1071,7 @@ wheels = [
 
 [[package]]
 name = "toolframe-audit"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "toolframe-sdk" },
@@ -1089,7 +1089,7 @@ dev = [
     { name = "pytest-asyncio" },
     { name = "ruff" },
     { name = "toolframe-core" },
-    { name = "toolframe-storage-sqlite" },
+    { name = "toolframe-sql-sqlite" },
 ]
 
 [package.metadata]
@@ -1106,12 +1106,12 @@ dev = [
     { name = "pytest-asyncio", specifier = ">=1,<2" },
     { name = "ruff", specifier = ">=0.12,<1" },
     { name = "toolframe-core", editable = "../toolframe-core" },
-    { name = "toolframe-storage-sqlite", editable = "../toolframe-storage-sqlite" },
+    { name = "toolframe-sql-sqlite", editable = "../toolframe-sql-sqlite" },
 ]
 
 [[package]]
 name = "toolframe-core"
-version = "0.6.2"
+version = "0.7.0"
 source = { editable = "../toolframe-core" }
 dependencies = [
     { name = "fastapi" },
@@ -1156,7 +1156,7 @@ dev = [
 
 [[package]]
 name = "toolframe-sdk"
-version = "0.3.0"
+version = "0.4.0"
 source = { editable = "../toolframe-sdk" }
 dependencies = [
     { name = "jsonschema" },
@@ -1182,9 +1182,9 @@ dev = [
 ]
 
 [[package]]
-name = "toolframe-storage-sqlite"
-version = "0.3.1"
-source = { editable = "../toolframe-storage-sqlite" }
+name = "toolframe-sql-sqlite"
+version = "0.4.0"
+source = { editable = "../toolframe-sql-sqlite" }
 dependencies = [
     { name = "toolframe-sdk" },
 ]

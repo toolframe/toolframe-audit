@@ -130,7 +130,7 @@ plugin = PluginDefinition(
             }
         }
     ),
-    requires={"storage": Requirement(service="toolframe.storage.sql")},
+    requires={"sql": Requirement(service="toolframe.sql")},
     services={
         SERVICE_NAME: ServiceSpec(
             methods={

@@ -44,7 +44,7 @@ class Records(Plugin):
     async def create_record(self, record_id: str, label: str) -> dict[str, str]:
         record_id = _text(record_id, "record_id", 128)
         label = _text(label, "label", 80)
-        async with self.context.storage().transaction() as transaction:
+        async with self.context.sql().transaction() as transaction:
             await transaction.execute(
                 "INSERT INTO business_records(id, label) VALUES (?, ?)",
                 (record_id, label),
@@ -62,7 +62,7 @@ class Records(Plugin):
 
     async def list_records(self, limit: int = 100) -> dict[str, Any]:
         limit = _limit(limit)
-        rows = await self.context.storage().query(
+        rows = await self.context.sql().query(
             "SELECT id AS record_id, label FROM business_records ORDER BY id DESC LIMIT ?",
             (limit,),
         )
@@ -80,7 +80,7 @@ class Records(Plugin):
         return {"status": "queued"}
 
     async def health(self) -> dict[str, str]:
-        await self.context.storage().query(
+        await self.context.sql().query(
             "SELECT id FROM business_records ORDER BY id LIMIT 1"
         )
         return {"runtime": "ready", "business": "ready"}

@@ -11,7 +11,7 @@ sibling checkouts for local development:
 ```sh
 uv venv --python 3.14 .venv
 uv pip install --python .venv/bin/python --no-sources --group dev \
-  -e . ../toolframe-sdk ../toolframe-storage-sqlite ../toolframe-core ../fastapi-cordis
+  -e . ../toolframe-sdk ../toolframe-sql-sqlite ../toolframe-core ../fastapi-cordis
 uv pip install --python .venv/bin/python 'streamlit>=1.61,<2'
 .venv/bin/pytest
 .venv/bin/ruff check .

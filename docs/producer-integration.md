@@ -25,19 +25,19 @@ transaction.
 
 ## Enqueue with the business write
 
-Use the producer's live `StorageClient` transaction for both operations. The
+Use the producer's live `SqlClient` transaction for both operations. The
 helper must receive the same transaction context; it never opens a second
 transaction.
 
 Pass the exact client used for the business mutation, including any custom
 storage alias. The helper rejects a client from another runtime context. If the
-producer uses a nondefault alias, pass that same alias as `storage_alias` when
+producer uses a nondefault alias, pass that same alias as `sql_alias` when
 draining; Core still fences each store by producer ownership.
 
 ```python
 from toolframe_audit import enqueue
 
-async with context.storage().transaction() as tx:
+async with context.sql().transaction() as tx:
     await tx.execute(
         "UPDATE invoices SET status = ? WHERE invoice_id = ?",
         ("paid", invoice_id),

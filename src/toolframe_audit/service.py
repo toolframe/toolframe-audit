@@ -30,7 +30,7 @@ class Audit(Plugin):
         maximum = bounded_integer(
             self.context.config.get("max_events", 100_000), "max_events", 1_000_000
         )
-        async with self.context.storage().transaction() as transaction:
+        async with self.context.sql().transaction() as transaction:
             result = await transaction.execute_returning(
                 "INSERT INTO audit_events (application_id, source_owner, event_id, "
                 "source_generation, occurred_at, received_at, action, entity_type, "
@@ -132,7 +132,7 @@ class Audit(Plugin):
                 clauses.append(f"occurred_at {comparison} ?")
                 parameters.append(value)
         where = " WHERE " + " AND ".join(clauses) if clauses else ""
-        storage = self.context.storage()
+        storage = self.context.sql()
         identities = await storage.query(
             "SELECT sequence FROM audit_events"
             + where
@@ -195,7 +195,7 @@ class Audit(Plugin):
             raise invalid(
                 "Applying retention requires through_sequence from a preview."
             )
-        async with self.context.storage().transaction() as transaction:
+        async with self.context.sql().transaction() as transaction:
             if through_sequence is None:
                 newest = await transaction.query(
                     "SELECT MAX(sequence) AS latest FROM audit_events"
@@ -238,7 +238,7 @@ class Audit(Plugin):
             }
 
     async def health(self):
-        await self.context.storage().query(
+        await self.context.sql().query(
             "SELECT event_count FROM audit_capacity WHERE singleton = 1"
         )
         return {"runtime": "ready", "business": "ready"}
