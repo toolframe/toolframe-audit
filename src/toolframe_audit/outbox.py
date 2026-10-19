@@ -7,7 +7,7 @@ import json
 import time
 from importlib.resources import files
 
-from toolframe_sdk import Migration, PluginError, StorageClient
+from toolframe_sdk import Migration, PluginError, SqlClient
 
 from .events import admitted, bounded_integer, normalize_event, now
 
@@ -22,7 +22,7 @@ def outbox_migration(*, revision="audit_outbox_v1", parent=None) -> Migration:
 
 async def enqueue(
     context,
-    transaction: StorageClient,
+    transaction: SqlClient,
     *,
     event_id: str,
     action: str,
@@ -32,13 +32,13 @@ async def enqueue(
     occurred_at: str | None = None,
     max_pending: int = 1000,
 ) -> dict:
-    """Enqueue inside the SAME live StorageClient transaction as the business write.
+    """Enqueue inside the SAME live SqlClient transaction as the business write.
 
     Identity and actor are captured from the admitted context. This function never
     opens a second transaction and cannot override the producer owner or actor.
     """
     if (
-        not isinstance(transaction, StorageClient)
+        not isinstance(transaction, SqlClient)
         or not transaction.token
         or transaction.context is not context
     ):
@@ -100,7 +100,7 @@ async def enqueue(
 
 
 async def drain(
-    context, *, alias="audit", storage_alias="storage", limit=25, budget_seconds=10
+    context, *, alias="audit", sql_alias="sql", limit=25, budget_seconds=10
 ) -> dict:
     """Deliver one short batch; acknowledge only accepted/deduplicated events.
 
@@ -116,7 +116,7 @@ async def drain(
         raise PluginError("audit_untrusted_context", "Drain requires an admitted root.")
     limit = bounded_integer(limit, "limit", 100)
     budget_seconds = bounded_integer(budget_seconds, "budget_seconds", 30)
-    storage = context.storage(storage_alias)
+    storage = context.sql(sql_alias)
     deadline = time.monotonic() + budget_seconds
     delivered = acknowledged = 0
     async with asyncio.timeout(budget_seconds):

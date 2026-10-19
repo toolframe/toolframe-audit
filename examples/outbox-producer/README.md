@@ -34,7 +34,7 @@ to its existing `[packages]` configuration without replacing other settings:
 find_links = ["../../../build/wheels"]
 ```
 
-This lets the example's isolated environment resolve `toolframe-audit==0.1.0`.
+This lets the example's isolated environment resolve `toolframe-audit==0.2.0`.
 Then, while that application is running:
 
 ```sh
@@ -65,5 +65,5 @@ original write and the actor admitted for the later delivery. A replay does not
 reconstruct the original visitor principal, and neither actor is a cryptographic
 proof of historical behavior. Producers must redact secrets and keep event
 metadata minimal. This example also assumes a configured SQL provider and an
-installed `toolframe-audit==0.1.0`; PostgreSQL migration SQL is supplied, while
+installed `toolframe-audit==0.2.0`; PostgreSQL migration SQL is supplied, while
 the runnable walkthrough uses the real SQLite provider.

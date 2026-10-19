@@ -7,11 +7,11 @@ producer's business mutation and pending audit event in the same SQL transaction
 
 ## Quick start
 
-Python 3.14 or later, Toolframe SDK 0.3.0 and a running Toolframe application with
+Python 3.14 or later, Toolframe SDK 0.4.0 and a running Toolframe application with
 a SQL storage provider are required. Install from PyPI:
 
 ```sh
-toolframe --home ./my-app plugin add pypi:toolframe-audit==0.1.0 --enable
+toolframe --home ./my-app plugin add pypi:toolframe-audit==0.2.0 --enable
 toolframe --home ./my-app plugin status audit --check
 ```
 

@@ -74,7 +74,7 @@ plugin = PluginDefinition(
         }
     ),
     requires={
-        "storage": Requirement(service="toolframe.storage.sql"),
+        "sql": Requirement(service="toolframe.sql"),
         "audit": Requirement(service="audit.events", version=1),
     },
     services={

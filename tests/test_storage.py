@@ -20,7 +20,7 @@ async def _list(harness, info, **filters):
 
 async def _producer_query(harness, info, sql, parameters=()):
     async with harness.as_context(info):
-        return await harness.producer_context.storage().query(sql, parameters)
+        return await harness.producer_context.sql().query(sql, parameters)
 
 
 @pytest.mark.asyncio
@@ -35,7 +35,7 @@ async def test_real_sqlite_owner_stores_are_isolated_and_outbox_migration_is_app
         "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name",
     )
     async with harness.as_context(audit_info):
-        audit_tables = await harness.audit.context.storage().query(
+        audit_tables = await harness.audit.context.sql().query(
             "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name"
         )
 
@@ -296,7 +296,7 @@ async def test_enqueue_uses_same_business_transaction_and_captures_original_acto
     )
     async with (
         harness.as_context(info),
-        harness.producer_context.storage().transaction() as transaction,
+        harness.producer_context.sql().transaction() as transaction,
     ):
         await transaction.execute(
             "INSERT INTO business_records(id, value) VALUES (?, ?)",
@@ -329,7 +329,7 @@ async def test_enqueue_uses_same_business_transaction_and_captures_original_acto
     with pytest.raises(TypeError):
         async with (
             harness.as_context(info),
-            harness.producer_context.storage().transaction() as transaction,
+            harness.producer_context.sql().transaction() as transaction,
         ):
             await enqueue(
                 harness.producer_context,
@@ -349,7 +349,7 @@ async def test_enqueue_from_sdk_task_root_uses_background_actor_in_same_sql_tran
     small_root = harness.info("producer", root_id="task-root", complete=False)
     async with (
         harness.as_context(small_root),
-        harness.producer_context.storage().transaction() as transaction,
+        harness.producer_context.sql().transaction() as transaction,
     ):
         await transaction.execute(
             "INSERT INTO business_records(id, value) VALUES (?, ?)",
@@ -386,7 +386,7 @@ async def test_business_and_outbox_rollback_together(harness):
     with pytest.raises(RuntimeError, match="abort business unit"):
         async with (
             harness.as_context(info),
-            harness.producer_context.storage().transaction() as transaction,
+            harness.producer_context.sql().transaction() as transaction,
         ):
             await transaction.execute(
                 "INSERT INTO business_records(id, value) VALUES (?, ?)",
@@ -418,7 +418,7 @@ async def test_outbox_capacity_and_invalid_transaction_are_rejected(harness):
         async with harness.as_context(info):
             await enqueue(
                 harness.producer_context,
-                harness.producer_context.storage(),
+                harness.producer_context.sql(),
                 event_id="without-transaction",
                 action="record.created",
                 entity_type="record",
@@ -432,7 +432,7 @@ async def test_outbox_capacity_and_invalid_transaction_are_rejected(harness):
     with pytest.raises(PluginError) as mismatch:
         async with (
             harness.as_context(info),
-            harness.producer_context.storage().transaction() as transaction,
+            harness.producer_context.sql().transaction() as transaction,
         ):
             await enqueue(
                 other_context,
@@ -447,7 +447,7 @@ async def test_outbox_capacity_and_invalid_transaction_are_rejected(harness):
     with pytest.raises(PluginError) as capacity:
         async with (
             harness.as_context(info),
-            harness.producer_context.storage().transaction() as transaction,
+            harness.producer_context.sql().transaction() as transaction,
         ):
             await enqueue(
                 harness.producer_context,
@@ -502,7 +502,7 @@ async def test_drain_replays_after_ack_failure_and_deduplicates_audit_event(
     )
     async with (
         harness.as_context(info),
-        harness.producer_context.storage().transaction() as transaction,
+        harness.producer_context.sql().transaction() as transaction,
     ):
         await enqueue(
             harness.producer_context,

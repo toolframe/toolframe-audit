@@ -14,7 +14,7 @@ from toolframe_sdk import (
     StoreSchema,
     call_context,
 )
-from toolframe_storage_sqlite.plugin import ADMIN_SERVICE, SQL_SERVICE, SqliteProvider
+from toolframe_sql_sqlite.plugin import ADMIN_SERVICE, SQL_SERVICE, SqliteProvider
 
 from toolframe_audit.outbox import outbox_migration
 from toolframe_audit.plugin import SERVICE_NAME
@@ -101,7 +101,7 @@ class _Peer:
             raise PluginError("fake_peer_method", f"Unsupported peer request {method}")
 
         alias = params["alias"]
-        if alias == "storage":
+        if alias == "sql":
             info = self._info()
             if (
                 self.plugin_id == "producer"
@@ -225,10 +225,10 @@ class Harness:
 
     async def start(self):
         provider_context = RuntimeContext(
-            _Peer(self, "storage-sqlite"),
-            plugin_id="storage-sqlite",
+            _Peer(self, "sql-sqlite"),
+            plugin_id="sql-sqlite",
             generation="storage-generation",
-            state_directory=str(self.root / "storage"),
+            state_directory=str(self.root / "sql"),
         )
         self.provider = SqliteProvider(provider_context)
         await self.provider.activate()
@@ -260,10 +260,10 @@ class Harness:
         assert self.provider is not None
         await self.provider.dispose()
         provider_context = RuntimeContext(
-            _Peer(self, "storage-sqlite"),
-            plugin_id="storage-sqlite",
+            _Peer(self, "sql-sqlite"),
+            plugin_id="sql-sqlite",
             generation="storage-generation-2",
-            state_directory=str(self.root / "storage"),
+            state_directory=str(self.root / "sql"),
         )
         self.provider = SqliteProvider(provider_context)
         await self.provider.activate()

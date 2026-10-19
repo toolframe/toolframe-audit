@@ -64,12 +64,12 @@ def wheelhouse() -> Path:
     sdk_source = Path(
         os.environ.get(
             "TOOLFRAME_AUDIT_SDK_SOURCE",
-            str(WORKSPACE / "toolframe-sdk" / ".worktrees" / "plugin-services"),
+            str(WORKSPACE / "toolframe-sdk"),
         )
     )
     sources = (
         sdk_source,
-        WORKSPACE / "toolframe-storage-sqlite",
+        WORKSPACE / "toolframe-sql-sqlite",
         WORKSPACE / "toolframe-auth",
         WORKSPACE / "toolframe-dashboard-auth",
         ROOT,
@@ -89,7 +89,7 @@ def wheelhouse() -> Path:
             )
     for prefix in (
         "toolframe-sdk",
-        "toolframe-storage-sqlite",
+        "toolframe-sql-sqlite",
         "toolframe-auth",
         "toolframe-dashboard-auth",
         "toolframe-audit",
@@ -131,7 +131,7 @@ async def install(host: Host, wheelhouse: Path, name: str) -> None:
 
 
 async def install_base(host: Host, wheelhouse: Path) -> None:
-    await install(host, wheelhouse, "storage-sqlite")
+    await install(host, wheelhouse, "sql-sqlite")
     await install(host, wheelhouse, "audit")
     await install(host, wheelhouse, "audit-example")
 
@@ -212,7 +212,7 @@ build-backend="hatchling.build"
 [project]
 name="audit-probe"
 version="0.1.0"
-dependencies=["toolframe-sdk==0.3.0"]
+dependencies=["toolframe-sdk==0.4.0"]
 [project.entry-points."toolframe.plugins"]
 probe="probe:plugin"
 [tool.hatch.build.targets.wheel]
