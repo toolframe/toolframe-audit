@@ -212,7 +212,7 @@ build-backend="hatchling.build"
 [project]
 name="audit-probe"
 version="0.1.0"
-dependencies=["toolframe-sdk==0.4.0"]
+dependencies=["toolframe-sdk>=0.4.0,<1"]
 [project.entry-points."toolframe.plugins"]
 probe="probe:plugin"
 [tool.hatch.build.targets.wheel]

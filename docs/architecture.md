@@ -2,7 +2,7 @@
 
 Toolframe Audit is an ordinary service plugin that stores bounded event history
 in the application's SQL storage. Version 0.2.0 requires Python 3.14 or later
-and `toolframe-sdk==0.4.0`. It requires the public
+and `toolframe-sdk>=0.4.0,<1`. It requires the public
 `toolframe.sql` service and uses only public SDK and service contracts;
 it does not import Core internals or extend the provider-kind registry.
 

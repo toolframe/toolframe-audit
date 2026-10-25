@@ -35,7 +35,7 @@ def main():
         )
         metadata = archive.read("toolframe_audit-0.2.0.dist-info/METADATA").decode()
         assert "Requires-Python: >=3.14" in metadata
-        assert "Requires-Dist: toolframe-sdk==0.4.0" in metadata
+        assert "Requires-Dist: toolframe-sdk<1,>=0.4.0" in metadata
         assert "License-Expression: Apache-2.0" in metadata
     with tempfile.TemporaryDirectory(prefix="audit-wheel-") as temporary:
         environment = Path(temporary) / "venv"

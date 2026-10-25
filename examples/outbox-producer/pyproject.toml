@@ -11,7 +11,7 @@ license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.14"
 dependencies = [
-    "toolframe-sdk==0.4.0",
+    "toolframe-sdk>=0.4.0,<1",
     "toolframe-audit==0.2.0",
 ]
 
