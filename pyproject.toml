@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "toolframe-audit"
-version = "0.2.0"
+version = "0.2.1"
 description = "Durable source-fenced audit events and transactional outbox helpers for Toolframe"
 readme = "README.md"
 license = "Apache-2.0"
