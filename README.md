@@ -11,7 +11,7 @@ Python 3.14 or later, Toolframe SDK 0.4.0 and a running Toolframe application wi
 a SQL storage provider are required. Install from PyPI:
 
 ```sh
-toolframe --home ./my-app plugin add pypi:toolframe-audit==0.2.0 --enable
+toolframe --home ./my-app plugin add pypi:toolframe-audit==0.2.1 --enable
 toolframe --home ./my-app plugin status audit --check
 ```
 
